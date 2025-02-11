@@ -28,10 +28,10 @@ class SOLUTION:
     def Wait_For_Simulation_To_End(self):
         while not os.path.exists(f"fitness{self.myID}.txt"):
             time.sleep(0.01)
+        time.sleep(0.01)
         with open(f"fitness{self.myID}.txt", "r") as f:
             self.fitness = float(f.readline())
         os.remove(f"fitness{self.myID}.txt")
-        print(self.fitness)
 
     def Mutate(self):
         row = np.random.randint(3)
