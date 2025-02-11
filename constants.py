@@ -5,3 +5,5 @@ frequency = 12
 phaseOffset = 0
 
 num_steps = 1000
+
+numberOfGenerations = 10

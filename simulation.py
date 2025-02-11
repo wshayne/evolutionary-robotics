@@ -7,8 +7,14 @@ import time
 
 class SIMULATION:
 
-    def __init__(self):
-        self.physicsClient = p.connect(p.GUI)
+    def __init__(self, directOrGUI):
+        self.directOrGUI = directOrGUI
+        if self.directOrGUI == "DIRECT":
+            self.physicsClient = p.connect(p.DIRECT)
+        elif self.directOrGUI == "GUI":
+            self.physicsClient = p.connect(p.GUI)
+        else:
+            raise(Exception("No DIRECT/GUI argumeng supplied"))
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         self.world = WORLD()
         self.robot = ROBOT()
@@ -21,7 +27,12 @@ class SIMULATION:
             self.robot.Sense(i)
             self.robot.Think()
             self.robot.Act(i)
-            time.sleep(1/500)
+            if self.directOrGUI == "GUI":
+                time.sleep(1/120)
+    
+
+    def Get_Fitness(self):
+        self.robot.Get_Fitness()
     
 
     def __del__(self):
