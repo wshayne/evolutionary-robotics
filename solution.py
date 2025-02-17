@@ -12,7 +12,7 @@ class SOLUTION:
     
     def Evaluate(self, directOrGUI):
         # self.Create_World()
-        self.Create_Body()
+        # self.Create_Body()
         self.Create_Brain()
         os.system(f"start /B python simulate.py {directOrGUI} {self.myID}")
         while not os.path.exists(f"fitness{self.myID}.txt"):

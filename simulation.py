@@ -16,6 +16,7 @@ class SIMULATION:
         else:
             raise(Exception("No DIRECT/GUI argumeng supplied"))
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
+        time.sleep(0.01)
         self.world = WORLD()
         self.robot = ROBOT(solutionID)
         p.setGravity(0,0,-9.8)
