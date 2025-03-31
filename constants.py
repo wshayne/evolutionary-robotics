@@ -6,7 +6,7 @@ phaseOffset = 0
 
 num_steps = 1000
 
-numberOfGenerations = 10
+numberOfGenerations = 50
 
 populationSize = 100
 

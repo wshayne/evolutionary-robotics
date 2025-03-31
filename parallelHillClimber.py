@@ -5,9 +5,18 @@ import copy
 import os
 import numpy as np
 import multiprocessing as mp
-
 class PARALLEL_HILL_CLIMBER:
     def __init__(self):
+        try:
+            os.remove("world.sdf")
+        except:
+            pass
+        try:
+            os.remove("body.urdf")
+        except:
+            pass
+        SOLUTION.Create_Body()
+        SOLUTION.Create_World()
         self.parents = {}
         for i in range(c.populationSize):
             self.parents[i] = SOLUTION()
@@ -58,3 +67,4 @@ class PARALLEL_HILL_CLIMBER:
                 min_fit = self.parents[p].fitness
                 min_p = p
         simulate.simulate(self.parents[min_p].brain, "GUI")
+        self.parents[min_p].Create_Brain()
