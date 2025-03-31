@@ -34,7 +34,7 @@ class PARALLEL_HILL_CLIMBER:
             self.children[c].Mutate()
     
     def Evaluate(self, solutions):
-        with mp.Pool() as p:
+        with mp.Pool(16) as p:
             fitnesses = p.starmap(SOLUTION.Evaluate, [(s, "DIRECT") for s in solutions.values()])
         for f, s in zip(fitnesses, solutions.values()):
             s.fitness = f
