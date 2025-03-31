@@ -1,18 +1,16 @@
 from solution import SOLUTION
+import simulate
 import constants as c
 import copy
 import os
 import numpy as np
+import multiprocessing as mp
 
 class PARALLEL_HILL_CLIMBER:
     def __init__(self):
-        os.system("del brain*.nndf")
-        os.system("del fitness*.txt")
         self.parents = {}
-        self.nextAvailableID = 0
         for i in range(c.populationSize):
-            self.parents[i] = SOLUTION(self.nextAvailableID)
-            self.nextAvailableID += 1
+            self.parents[i] = SOLUTION()
     
     def Evolve(self):
         self.Evaluate(self.parents)
@@ -30,18 +28,16 @@ class PARALLEL_HILL_CLIMBER:
         self.children = {}
         for i in self.parents:
             self.children[i] = copy.deepcopy(self.parents[i])
-            self.children[i].Set_ID(self.nextAvailableID)
-            self.nextAvailableID += 1
 
     def Mutate(self):
         for c in self.children:
             self.children[c].Mutate()
     
     def Evaluate(self, solutions):
-        for p in solutions:
-            solutions[p].Start_Simulation("DIRECT")
-        for p in solutions:
-            solutions[p].Wait_For_Simulation_To_End()
+        with mp.Pool() as p:
+            fitnesses = p.starmap(SOLUTION.Evaluate, [(s, "DIRECT") for s in solutions.values()])
+        for f, s in zip(fitnesses, solutions.values()):
+            s.fitness = f
 
     def Select(self):
         for p in self.parents:
@@ -61,4 +57,4 @@ class PARALLEL_HILL_CLIMBER:
             if self.parents[p].fitness < min_fit:
                 min_fit = self.parents[p].fitness
                 min_p = p
-        self.parents[min_p].Start_Simulation("GUI")
+        simulate.simulate(self.parents[min_p].brain, "GUI")

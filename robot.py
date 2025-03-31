@@ -8,11 +8,9 @@ import constants as c
 
 class ROBOT:
 
-    def __init__(self, solutionID):
-        self.solutionID = solutionID
+    def __init__(self, nn):
         self.robot = p.loadURDF("body.urdf")
-        self.nn = NEURAL_NETWORK(f"brain{solutionID}.nndf")
-        os.remove(f"brain{solutionID}.nndf")
+        self.nn = nn
         pyrosim.Prepare_To_Simulate(self.robot)
         self.Prepare_To_Sense()
         self.Prepare_To_Act()
@@ -56,6 +54,4 @@ class ROBOT:
         basePositionAndOrientation = p.getBasePositionAndOrientation(self.robot)
         basePosition = basePositionAndOrientation[0]
         xPosition = basePosition[0]
-        with open(f"tmp{self.solutionID}.txt", "w") as f:
-            f.write(str(xPosition))
-        os.rename(f"tmp{self.solutionID}.txt", f"fitness{self.solutionID}.txt")
+        return xPosition

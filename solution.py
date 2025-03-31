@@ -1,53 +1,42 @@
 import numpy as np
 import pyrosim.pyrosim as pyrosim
+from pyrosim.neuralNetwork import NEURAL_NETWORK
+from simulate import simulate
 import os
 import time
 import constants as c
+import random
 
 class SOLUTION:
-    def __init__(self, myID):
+    def __init__(self):
         self.weights = np.random.random((c.numSensorNeurons, c.numMotorNeurons))
         self.weights = self.weights * 2 - 1
-        self.myID = myID
+        self.myID = np.random.randint(100000)
+        self.Create_Brain()
+        self.brain = NEURAL_NETWORK(f"brain{self.myID}.nndf")
+        os.remove(f"brain{self.myID}.nndf")
     
     def Evaluate(self, directOrGUI):
-        # self.Create_World()
-        # self.Create_Body()
-        self.Create_Brain()
-        os.system(f"start /B python simulate.py {directOrGUI} {self.myID}")
-        while not os.path.exists(f"fitness{self.myID}.txt"):
-            time.sleep(0.01)
-        with open(f"fitness{self.myID}.txt", "r") as f:
-            self.fitness = float(f.readline())
-    
-    def Start_Simulation(self, directOrGUI):
-        self.Create_World()
-        self.Create_Body()
-        self.Create_Brain()
-        os.system(f"start /B python simulate.py {directOrGUI} {self.myID}")
-
-    def Wait_For_Simulation_To_End(self):
-        while not os.path.exists(f"fitness{self.myID}.txt"):
-            time.sleep(0.01)
-        time.sleep(0.01)
-        with open(f"fitness{self.myID}.txt", "r") as f:
-            self.fitness = float(f.readline())
-        os.remove(f"fitness{self.myID}.txt")
+        self.fitness = simulate(self.brain, directOrGUI)
+        return self.fitness
 
     def Mutate(self):
-        row = np.random.randint(c.numSensorNeurons)
-        column = np.random.randint(c.numMotorNeurons)
-        self.weights[row, column] = np.random.uniform() * 2 - 1
+        synapse = random.choice(list(self.brain.synapses.keys()))
+        new_val = np.random.uniform() * 2 - 1
+        self.brain.synapses[synapse].weight = new_val
+        self.weights[int(synapse[0]), int(synapse[1]) - c.numSensorNeurons] = new_val
     
     def Set_ID(self, ID):
         self.myID = ID
     
-    def Create_World(self):
+    @staticmethod
+    def Create_World():
         pyrosim.Start_SDF("world.sdf")
         pyrosim.Send_Cube(name="Box", pos=[-3,3,.5], size=[1,1,1])
         pyrosim.End()
 
-    def Create_Body(self):
+    @staticmethod
+    def Create_Body():
         pyrosim.Start_URDF("body.urdf")
         pyrosim.Send_Cube(name="Torso", pos=[0, 0, 1], size=[1,1,1])
         pyrosim.Send_Joint(name="Torso_FrontLeg", parent="Torso", child="FrontLeg", type="revolute", position=[0, 0.5, 1], jointAxis="1 0 0")

@@ -7,18 +7,18 @@ import time
 
 class SIMULATION:
 
-    def __init__(self, directOrGUI, solutionID):
+    def __init__(self, directOrGUI, brain):
         self.directOrGUI = directOrGUI
         if self.directOrGUI == "DIRECT":
             self.physicsClient = p.connect(p.DIRECT)
         elif self.directOrGUI == "GUI":
             self.physicsClient = p.connect(p.GUI)
         else:
-            raise(Exception("No DIRECT/GUI argumeng supplied"))
+            raise(Exception("No DIRECT/GUI argument supplied"))
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         time.sleep(0.01)
         self.world = WORLD()
-        self.robot = ROBOT(solutionID)
+        self.robot = ROBOT(brain)
         p.setGravity(0,0,-9.8)
 
 
@@ -33,7 +33,7 @@ class SIMULATION:
     
 
     def Get_Fitness(self):
-        self.robot.Get_Fitness()
+        return self.robot.Get_Fitness()
     
 
     def __del__(self):

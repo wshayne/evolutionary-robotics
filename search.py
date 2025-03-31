@@ -1,10 +1,7 @@
 import os
 from parallelHillClimber import PARALLEL_HILL_CLIMBER
 
-phc = PARALLEL_HILL_CLIMBER()
-phc.Evolve()
-phc.Show_Best()
-
-# for _ in range(5):
-#     os.system("python generate.py")
-#     os.system("python simulate.py")
+if __name__ == '__main__':
+    phc = PARALLEL_HILL_CLIMBER()
+    phc.Evolve()
+    phc.Show_Best()
