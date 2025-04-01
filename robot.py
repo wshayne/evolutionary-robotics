@@ -50,8 +50,7 @@ class ROBOT:
         # self.nn.Print()
     
 
-    def Get_Fitness(self):
+    def Get_Position(self):
         basePositionAndOrientation = p.getBasePositionAndOrientation(self.robot)
         basePosition = basePositionAndOrientation[0]
-        xPosition = basePosition[0]
-        return xPosition
+        return basePosition[:2]

@@ -4,10 +4,12 @@ import pybullet as p
 import pybullet_data
 import constants as c
 import time
+import numpy as np
 
 class SIMULATION:
 
-    def __init__(self, directOrGUI, brain):
+    def __init__(self, directOrGUI, brain, target):
+        self.target = target
         self.directOrGUI = directOrGUI
         if self.directOrGUI == "DIRECT":
             self.physicsClient = p.connect(p.DIRECT)
@@ -18,6 +20,12 @@ class SIMULATION:
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         time.sleep(0.01)
         self.world = WORLD()
+        for neuron in brain.neurons.values():
+            if neuron.Is_Sensor_Neuron():
+                if neuron.linkName == 'targetX':
+                    neuron.Set_Value(target[0])
+                elif neuron.linkName == 'targetY':
+                    neuron.Set_Value(target[1])
         self.robot = ROBOT(brain)
         p.setGravity(0,0,-9.8)
 
@@ -33,7 +41,9 @@ class SIMULATION:
     
 
     def Get_Fitness(self):
-        return self.robot.Get_Fitness()
+        pos = self.robot.Get_Position()
+        dist = np.linalg.norm(np.array(pos) - np.array(self.target))
+        return dist
     
 
     def __del__(self):

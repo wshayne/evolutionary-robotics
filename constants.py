@@ -6,11 +6,11 @@ phaseOffset = 0
 
 num_steps = 1000
 
-numberOfGenerations = 50
+numberOfGenerations = 10
 
 populationSize = 100
 
-numSensorNeurons = 9
+numSensorNeurons = 11
 numMotorNeurons = 8
 
 motorJointRange = 0.2

@@ -43,8 +43,12 @@ class PARALLEL_HILL_CLIMBER:
             self.children[c].Mutate()
     
     def Evaluate(self, solutions):
+        test_pos = [[3, 0], [-3, 0]]
         with mp.Pool(16) as p:
-            fitnesses = p.starmap(SOLUTION.Evaluate, [(s, "DIRECT") for s in solutions.values()])
+            res = []
+            for pos in test_pos:
+                res.append(p.starmap(SOLUTION.Evaluate, [(s, "DIRECT", pos) for s in solutions.values()]))
+        fitnesses = np.sum(res, axis=0)
         for f, s in zip(fitnesses, solutions.values()):
             s.fitness = f
 
@@ -66,5 +70,6 @@ class PARALLEL_HILL_CLIMBER:
             if self.parents[p].fitness < min_fit:
                 min_fit = self.parents[p].fitness
                 min_p = p
-        simulate.simulate(self.parents[min_p].brain, "GUI")
+        simulate.simulate(self.parents[min_p].brain, "GUI", [3, 0])
+        simulate.simulate(self.parents[min_p].brain, "GUI", [-3, 0])
         self.parents[min_p].Create_Brain()
