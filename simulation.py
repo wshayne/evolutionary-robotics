@@ -20,6 +20,7 @@ class SIMULATION:
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         time.sleep(0.01)
         self.world = WORLD()
+        self.positions = []
         for neuron in brain.neurons.values():
             if neuron.Is_Sensor_Neuron():
                 if neuron.linkName == 'targetX':
@@ -36,14 +37,16 @@ class SIMULATION:
             self.robot.Sense(i)
             self.robot.Think()
             self.robot.Act(i)
+            self.positions.append(self.robot.Get_Position())
             if self.directOrGUI == "GUI":
                 time.sleep(1/120)
     
 
     def Get_Fitness(self):
-        pos = self.robot.Get_Position()
-        dist = np.linalg.norm(np.array(pos) - np.array(self.target))
-        return dist
+        fitness = 0
+        for pos in self.positions:
+            fitness += np.linalg.norm(np.array(pos) - np.array(self.target))
+        return fitness
     
 
     def __del__(self):
