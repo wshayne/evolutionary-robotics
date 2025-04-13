@@ -9,7 +9,7 @@ import random
 
 class SOLUTION:
     def __init__(self):
-        self.weights = np.random.random((c.numSensorNeurons, c.numMotorNeurons))
+        self.weights = np.random.random((c.numSensorNeurons + c.numHiddenNeurons, c.numHiddenNeurons + c.numMotorNeurons))
         self.weights = self.weights * 2 - 1
         self.myID = np.random.randint(100000)
         self.Create_Brain()
@@ -62,10 +62,12 @@ class SOLUTION:
         links = ["Torso", "BackLeg", "FrontLeg", "LeftLeg", "RightLeg", "FrontLowerLeg", "BackLowerLeg", "LeftLowerLeg", "RightLowerLeg", "targetX", "targetY"]
         for i in range(len(links)):
             pyrosim.Send_Sensor_Neuron(name=i, linkName=links[i])
+        for i in range(len(links), len(links) + c.numHiddenNeurons):
+            pyrosim.Send_Hidden_Neuron(name=i)
         joints = ["Torso_BackLeg", "Torso_FrontLeg", "Torso_LeftLeg", "Torso_RightLeg", "FrontLeg_FrontLowerLeg", "BackLeg_BackLowerLeg", "LeftLeg_LeftLowerLeg", "RightLeg_RightLowerLeg"]
         for i in range(len(joints)):
-            pyrosim.Send_Motor_Neuron(name=i+len(links), jointName=joints[i])
-        for currentRow in range(c.numSensorNeurons):
-            for currentColumn in range(c.numMotorNeurons):
+            pyrosim.Send_Motor_Neuron(name=i+len(links)+c.numHiddenNeurons, jointName=joints[i])
+        for currentRow in range(c.numSensorNeurons + c.numHiddenNeurons):
+            for currentColumn in range(c.numHiddenNeurons + c.numMotorNeurons):
                 pyrosim.Send_Synapse(sourceNeuronName=currentRow, targetNeuronName=currentColumn+c.numSensorNeurons, weight=self.weights[currentRow][currentColumn])
         pyrosim.End()

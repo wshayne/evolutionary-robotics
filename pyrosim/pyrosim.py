@@ -149,7 +149,7 @@ def Send_Sensor_Neuron(name,linkName):
     f.write('    <neuron name = "' + str(name) + '" type = "sensor" linkName = "' + linkName + '" />\n')
 
 def Send_Hidden_Neuron(name):
-    f.write('    <neuron name = "' + str(name) + '" />\n')
+    f.write('    <neuron name = "' + str(name) + '" type = "hidden" />\n')
 
 def Send_Synapse( sourceNeuronName , targetNeuronName , weight ):
 
