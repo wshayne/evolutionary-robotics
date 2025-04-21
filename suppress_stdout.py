@@ -16,3 +16,18 @@ def stdout_redirected(to=os.devnull):
             yield
         finally:
             _redirect_stdout(to=old_stdout)
+
+@contextmanager
+def stderr_redirected(to=os.devnull):
+    fd = sys.stderr.fileno()
+    def _redirect_stdout(to):
+        sys.stderr.close()
+        os.dup2(to.fileno(), fd)
+        sys.stderr = os.fdopen(fd, 'w')
+    with os.fdopen(os.dup(fd), 'w') as old_stderr:
+        with open(to, 'w') as file:
+            _redirect_stdout(to=file)
+        try:
+            yield
+        finally:
+            _redirect_stdout(to=old_stderr)

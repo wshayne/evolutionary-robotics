@@ -29,6 +29,6 @@ from simulate import simulate
 #         print(p.map(add_one, lists))
 #         print(lists)
 
-brain = NEURAL_NETWORK("brain33726.nndf")
+brain = NEURAL_NETWORK("brain76141.nndf")
 
-print(simulate(brain, "GUI", [-3, 0]))
+print(simulate(brain, "GUI", [0, -3]))

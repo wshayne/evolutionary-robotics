@@ -22,14 +22,16 @@ class PARALLEL_HILL_CLIMBER:
             self.parents[i] = SOLUTION()
     
     def Evolve(self):
-        self.Evaluate(self.parents)
+        # self.Evaluate(self.parents)
         for _ in range(c.numberOfGenerations):
             self.Evolve_For_One_Generation()
 
     def Evolve_For_One_Generation(self):
         self.Spawn()
         self.Mutate()
-        self.Evaluate(self.children)
+        positions = np.random.uniform(-5, 5, (5, 2))
+        self.Evaluate(self.parents, positions)
+        self.Evaluate(self.children, positions)
         self.Print()
         self.Select()
 
@@ -42,11 +44,12 @@ class PARALLEL_HILL_CLIMBER:
         for c in self.children:
             self.children[c].Mutate()
     
-    def Evaluate(self, solutions):
-        test_pos = [[3, 0], [-3, 0]]
+    def Evaluate(self, solutions, positions):
+        # test_pos = [[3, 0], [-3, 0]]
+        # test_pos = np.random.uniform(-5, 5, (5, 2))
         with mp.Pool(16) as p:
             res = []
-            for pos in test_pos:
+            for pos in positions:
                 res.append(p.starmap(SOLUTION.Evaluate, [(s, "DIRECT", pos) for s in solutions.values()]))
         fitnesses = np.sum(res, axis=0)
         for f, s in zip(fitnesses, solutions.values()):

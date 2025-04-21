@@ -1,5 +1,6 @@
 import os
 from parallelHillClimber import PARALLEL_HILL_CLIMBER
+import pickle
 import time
 
 if __name__ == '__main__':
@@ -9,3 +10,5 @@ if __name__ == '__main__':
     end = time.time() 
     phc.Show_Best()
     print(end - start)
+    with open('climber.pickle', 'wb') as f:
+        pickle.dump(phc, f)
