@@ -10,7 +10,7 @@ numberOfGenerations = 100
 
 populationSize = 100
 
-numSensorNeurons = 11
+numSensorNeurons = 13
 numHiddenNeurons = 10
 numMotorNeurons = 8
 

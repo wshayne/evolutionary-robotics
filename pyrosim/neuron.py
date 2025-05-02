@@ -67,7 +67,7 @@ class NEURON:
         self.value = value
     
     def Update_Sensor_Neuron(self):
-        if not self.Get_Link_Name().startswith("target"):
+        if not (self.Get_Link_Name().startswith("target") or self.Get_Link_Name().startswith("pos")):
             self.Set_Value(pyrosim.Get_Touch_Sensor_Value_For_Link(self.Get_Link_Name()))
     
     def Update_Hidden_Or_Motor_Neuron(self, neurons, synapses):

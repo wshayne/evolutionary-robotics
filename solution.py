@@ -59,7 +59,7 @@ class SOLUTION:
 
     def Create_Brain(self):
         pyrosim.Start_NeuralNetwork(f"brain{self.myID}.nndf")
-        links = ["Torso", "BackLeg", "FrontLeg", "LeftLeg", "RightLeg", "FrontLowerLeg", "BackLowerLeg", "LeftLowerLeg", "RightLowerLeg", "targetX", "targetY"]
+        links = ["Torso", "BackLeg", "FrontLeg", "LeftLeg", "RightLeg", "FrontLowerLeg", "BackLowerLeg", "LeftLowerLeg", "RightLowerLeg", "targetX", "targetY", "posX", "posY"]
         for i in range(len(links)):
             pyrosim.Send_Sensor_Neuron(name=i, linkName=links[i])
         for i in range(len(links), len(links) + c.numHiddenNeurons):
