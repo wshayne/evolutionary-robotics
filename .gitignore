@@ -5,3 +5,5 @@ __pycache__/
 *.nndf
 milestones.txt
 *.pickle
+*.npy
+report/

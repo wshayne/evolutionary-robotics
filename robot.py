@@ -8,18 +8,20 @@ import constants as c
 
 class ROBOT:
 
-    def __init__(self, nn):
+    def __init__(self, nn, ab):
         self.robot = p.loadURDF("body.urdf")
         self.nn = nn
+        self.ab = ab
         pyrosim.Prepare_To_Simulate(self.robot)
         self.Prepare_To_Sense()
         self.Prepare_To_Act()
-        for name, neuron in self.nn.neurons.items():
-            if neuron.Is_Sensor_Neuron():
-                if neuron.Get_Link_Name() == "posX":
-                    self.xNeuron = name
-                if neuron.Get_Link_Name() == "posY":
-                    self.yNeuron = name
+        if self.ab == "b":
+            for name, neuron in self.nn.neurons.items():
+                if neuron.Is_Sensor_Neuron():
+                    if neuron.Get_Link_Name() == "posX":
+                        self.xNeuron = name
+                    if neuron.Get_Link_Name() == "posY":
+                        self.yNeuron = name
 
 
     def Prepare_To_Sense(self):
@@ -52,10 +54,11 @@ class ROBOT:
             sensor.Save_Values()
     
     def Think(self):
+        if self.ab == "b":
+            pos = self.Get_Position()
+            self.nn.neurons[self.xNeuron].Set_Value(pos[0])
+            self.nn.neurons[self.yNeuron].Set_Value(pos[1])
         self.nn.Update()
-        pos = self.Get_Position()
-        self.nn.neurons[self.xNeuron].Set_Value(pos[0])
-        self.nn.neurons[self.yNeuron].Set_Value(pos[1])
         # self.nn.Print()
     
 

@@ -3,8 +3,11 @@ import constants as c
 import multiprocessing as mp
 from pyrosim.neuralNetwork import NEURAL_NETWORK
 from simulate import simulate
+from parallelHillClimber import PARALLEL_HILL_CLIMBER
+import os
 
-# s = SOLUTION()
+s = SOLUTION('b')
+s.Create_Brain()
 
 # print(s.brain.synapses)
 # print(s.weights)
@@ -30,6 +33,12 @@ from simulate import simulate
 #         print(lists)
 
 #brain = NEURAL_NETWORK("brain76141.nndf")
-brain = NEURAL_NETWORK("brain70674.nndf")
+# brain = NEURAL_NETWORK("brain70674.nndf")
 
-print(simulate(brain, "GUI", [0, -3]))
+# print(simulate(brain, "GUI", [0, -3]))
+
+# if __name__ == "__main__":
+#     phc = PARALLEL_HILL_CLIMBER("a")
+#     phc.Evolve_For_One_Generation()
+#     os.mkdir("test_brains")
+#     phc.Save_Brains("test_brains/")

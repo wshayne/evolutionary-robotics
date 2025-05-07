@@ -6,7 +6,7 @@ import os
 import numpy as np
 import multiprocessing as mp
 class PARALLEL_HILL_CLIMBER:
-    def __init__(self):
+    def __init__(self, ab):
         try:
             os.remove("world.sdf")
         except:
@@ -19,18 +19,22 @@ class PARALLEL_HILL_CLIMBER:
         SOLUTION.Create_World()
         self.parents = {}
         for i in range(c.populationSize):
-            self.parents[i] = SOLUTION()
+            self.parents[i] = SOLUTION(ab)
+        self.true_fitnesses = []
+        self.evaluated_fitnesses = []
     
     def Evolve(self):
         # self.Evaluate(self.parents)
-        for _ in range(c.numberOfGenerations):
+        for i in range(c.numberOfGenerations):
             self.Evolve_For_One_Generation()
+            if i%10 == 0:
+                self.evaluated_fitnesses.append(self.Evaluate(self.parents, [[0, 0], [3, 0], [-3, 0], [0, 3], [0, -3], [3, 3], [3, -3], [-3, 3], [-3, -3]]))
 
     def Evolve_For_One_Generation(self):
         self.Spawn()
         self.Mutate()
         positions = np.random.uniform(-5, 5, (5, 2))
-        self.Evaluate(self.parents, positions)
+        self.true_fitnesses.append(self.Evaluate(self.parents, positions))
         self.Evaluate(self.children, positions)
         self.Print()
         self.Select()
@@ -54,6 +58,7 @@ class PARALLEL_HILL_CLIMBER:
         fitnesses = np.sum(res, axis=0)
         for f, s in zip(fitnesses, solutions.values()):
             s.fitness = f
+        return fitnesses
 
     def Select(self):
         for p in self.parents:
@@ -73,6 +78,14 @@ class PARALLEL_HILL_CLIMBER:
             if self.parents[p].fitness < min_fit:
                 min_fit = self.parents[p].fitness
                 min_p = p
-        simulate.simulate(self.parents[min_p].brain, "GUI", [3, 0])
-        simulate.simulate(self.parents[min_p].brain, "GUI", [-3, 0])
+        simulate.simulate(self.parents[min_p].brain, "GUI", [3, 0], self.ab)
+        simulate.simulate(self.parents[min_p].brain, "GUI", [-3, 0], self.ab)
         self.parents[min_p].Create_Brain()
+    
+    def Save_Brains(self, prefix=""):
+        for i, p in enumerate(self.parents.values()):
+            p.Create_Brain(filename=f"{prefix}brain{i}.nndf")
+    
+    def Save_Fitness_History(self, prefix=""):
+        np.save(f"{prefix}true_fitnesses.npy", self.true_fitnesses)
+        np.save(f"{prefix}evaluated_fitnesses.npy", self.evaluated_fitnesses)

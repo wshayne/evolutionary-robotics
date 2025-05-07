@@ -8,7 +8,7 @@ import numpy as np
 
 class SIMULATION:
 
-    def __init__(self, directOrGUI, brain, target):
+    def __init__(self, directOrGUI, brain, target, ab):
         self.target = target
         self.directOrGUI = directOrGUI
         if self.directOrGUI == "DIRECT":
@@ -17,6 +17,7 @@ class SIMULATION:
             self.physicsClient = p.connect(p.GUI)
         else:
             raise(Exception("No DIRECT/GUI argument supplied"))
+        p.configureDebugVisualizer(p.COV_ENABLE_GUI, 0)
         p.setAdditionalSearchPath(pybullet_data.getDataPath())
         time.sleep(0.01)
         self.world = WORLD()
@@ -27,7 +28,7 @@ class SIMULATION:
                     neuron.Set_Value(target[0])
                 elif neuron.linkName == 'targetY':
                     neuron.Set_Value(target[1])
-        self.robot = ROBOT(brain)
+        self.robot = ROBOT(brain, ab)
         p.setGravity(0,0,-9.8)
 
 
